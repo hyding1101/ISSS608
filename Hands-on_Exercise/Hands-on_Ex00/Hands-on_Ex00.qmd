@@ -24,3 +24,41 @@ Code chunk below uses read_csv() of readr to import REALIS2019.csv into r enviro
 ```{r}
 realis2019 <- read_csv("data/REALIS2019.csv")
 ```
+
+```{r}
+#| eval: FALSE
+popdata_fat <- read_csv("data/PopData2019_fat.csv")
+```
+
+Pivoting data
+
+```{r}
+#| eval: FALSE
+popdata_long <- popdata_fat %>%
+  pivot_longer(c(3:21),
+               names_to = "Age Group",
+               values_to = "Population")
+```
+
+```{r}
+
+write_rds(popdata_long, "rds/popdata_long.rds")
+```
+
+```{r}
+popdata_long <- read_rds("rds/popdata_long.rds")
+```
+
+working with dplyr
+
+```{r}
+realis2019_selected <- realis2019_selected %>%
+  select(`Project Name`,
+         `Transacted Price ($)`,
+         )
+```
+
+```{r}
+realis2019_selected <- realis2019_selected %>%
+  
+```
