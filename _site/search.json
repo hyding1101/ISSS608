@@ -12,5 +12,12 @@
     "title": "About",
     "section": "",
     "text": "I am Hong Yan. This is the course page of ISSS608 whereby I share my Hands-on Exercises, In-class Exercises, Take-home Exercises and Project."
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on_Ex00/Hands-on_Ex00.html",
+    "href": "Hands-on_Exercise/Hands-on_Ex00/Hands-on_Ex00.html",
+    "title": "Hands-on Exercise 00: Working with tidyverse",
+    "section": "",
+    "text": "Getting started\nLoading tidyverse onto r environment by using the code chunk below.\n\npacman::p_load(tidyverse)\n\nImporting data\nCode chunk below uses read_csv() of readr to import REALIS2019.csv into r environment as a tribble data. frame.\n\nrealis2019 &lt;- read_csv(\"data/REALIS2019.csv\")"
   }
 ]

@@ -3,3 +3,5 @@ title: "ISSS608"
 ---
 
 Welcome to **ISSS608 Visual Analytics and Applications**.
+
+![](images/photo_2025-01-11 14.28.03.jpeg)
