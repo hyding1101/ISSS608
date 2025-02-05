@@ -10,17 +10,17 @@ website:
       - text: "Hands-on Exercise 0"
         href: Hands-on_Exercise/Hands-on_Ex00/Hands-on_Ex00.html
       - text: "Hands-on Exercise 1"
-        href: Hands-on_Exercise/Hands_on_Ex01/Hands-On_Ex01.qmd
+        href: Hands-on_Exercise/Hands_on_Ex01/Hands-On_Ex01.html
       - text: "Hands-on Exercise 2"
-        href: Hands-on_Exercise/Hands_on_Ex02/Hands-On_Ex02.qmd
+        href: Hands-on_Exercise/Hands_on_Ex02/Hands-On_Ex02.html
       - text: "Hands-on Exercise 3"
-        href: Hands-on_Exercise/Hands_on_Ex03/Hands-On_Ex03.qmd
+        href: Hands-on_Exercise/Hands_on_Ex03/Hands-On_Ex03.html
       - text: "Hands-on Exercise 4"
-        href: Hands-on_Exercise/Hands_on_Ex04/Hands-On_Ex04.qmd
+        href: Hands-on_Exercise/Hands_on_Ex04/Hands-On_Ex04.html
       - text: "Hands-on Exercise 5"
-        href: Hands-on_Exercise/Hands_on_Ex05/Hands-On_Ex05.qmd 
+        href: Hands-on_Exercise/Hands_on_Ex05/Hands-On_Ex05.html
       - text: "Hands-on Exercise 6"
-        href: Hands-on_Exercise/Hands-on_Ex06/Hands-On_Ex06.qmd  
+        href: Hands-on_Exercise/Hands-on_Ex06/Hands-On_Ex06.html
     - text: "In-class Exercise"
       menu:
       - text: "In-class Exercise 1"
