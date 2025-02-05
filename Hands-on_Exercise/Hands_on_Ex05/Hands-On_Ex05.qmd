@@ -117,7 +117,7 @@ ggplot(exam,
 The function **`geom_density_ridges()`** from the **`ggridges`** package is used to create **Ridgeline Density Plots**, which visualize the distribution of a numerical variable across multiple categories.
 
 | Parameter | Description |
-|-----------------|-------------------------------------------------------|
+|----|----|
 | scale = 3 | Adjusts the height of the ridgelines. A higher value increases the separation between ridges. |
 | rel_min_height = 0.01 | Controls the minimum height of density estimates, ensuring that small peaks are not filtered out. |
 | bandwidth = 3.4 | Defines the smoothness of the density curves. Higher values make the curves smoother, while lower values preserve more details. |
@@ -180,7 +180,7 @@ ggplot(exam,
 This part of the code **creates a ridgeline density plot with a gradient color effect**, where the **fill color changes based on the x-axis values (`ENGLISH` scores)**.
 
 | Parameter | Description |
-|-----------------------|-------------------------------------------------|
+|----|----|
 | scale = 3 | Controls the height of ridgelines. Higher values increase the separation between ridges. |
 | rel_min_height = 0.01 | Sets the minimum height of density estimates, preventing small peaks from being removed. |
 | Gradient Effect | Uses **`fill = stat(x)`** (set in `aes()`) to color the ridges based on the x-axis values (`ENGLISH` scores). |
@@ -231,7 +231,7 @@ ggplot(exam,
 This formula is responsible for determining **how color is assigned** to different regions of the density plot.
 
 | Formula Component | Meaning |
-|-------------------|-----------------------------------------------------|
+|----|----|
 | stat(ecdf) | Computes the **cumulative probability** (ECDF) for each value of `ENGLISH` (ranges from `0` to `1`). |
 | 0.5 - stat(ecdf) | Measures the **distance of a score’s probability from the center (0.5)**. |
 | abs(0.5 - stat(ecdf)) | Ensures that both **low and high values move away from the center symmetrically**. |
@@ -244,7 +244,7 @@ This formula is responsible for determining **how color is assigned** to differe
 This function is responsible for **drawing the ridgeline density plot** while allowing color to vary across the distribution.
 
 | Parameter | Meaning |
-|-----------------------------|-------------------------------------------|
+|----|----|
 | geom = "density_ridges_gradient" | Uses **a smooth color gradient** instead of solid fills. |
 | calc_ecdf = TRUE | Computes the **empirical cumulative distribution function (ECDF)** to allow probability-based coloring. |
 :::
@@ -255,7 +255,7 @@ This function is responsible for **drawing the ridgeline density plot** while al
 This function **applies a color scale** to the `fill` values computed earlier.
 
 | Parameter | Meaning |
-|----------------|--------------------------------------------------------|
+|----|----|
 | name = "Tail probability" | Renames the legend to indicate it represents **tail probability**. |
 | direction = -1 | **Reverses the Viridis color scale** so that **extreme values (tails) appear lighter, while middle values appear darker**. |
 :::
@@ -311,7 +311,7 @@ ggplot(exam,
 ## stat_density_ridges() – Compute Density and Add Quantile Lines
 
 | Parameter | Description |
-|--------------------------|----------------------------------------------|
+|----|----|
 | geom = "density_ridges_gradient" | Uses gradient colors for the ridgelines (allows color variation). |
 | calc_ecdf = TRUE | Computes the **empirical cumulative distribution function (ECDF)** to assign colors based on probability. |
 | quantiles = 4 | **Divides the distribution into four quartiles (Q1, Q2, Q3, Q4)**. |
@@ -426,7 +426,7 @@ We remove the slab interval by setting .width = 0 and point_colour = NA.
 ## stat_halfeye()
 
 | Parameter | Function |
-|---------------------|---------------------------------------------------|
+|----|----|
 | adjust = 0.5 | Controls the **smoothness of the density curve**. A smaller value makes the curve sharper, while a larger value makes it smoother. Here, `0.5` is chosen to slightly smooth the curve while retaining distribution characteristics. |
 | justification = -0.2 | **Adjusts the position of the plot**, shifting it slightly to the left to prevent overlap with the Y-axis labels. |
 | .width = 0 | Normally used to define the **interval range (credible intervals)**, but here it is set to `0`, meaning **no interval range is displayed**. |
