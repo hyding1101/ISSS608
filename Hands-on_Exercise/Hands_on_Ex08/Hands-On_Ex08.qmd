@@ -37,7 +37,7 @@ In this exercise, four R packages will be used. They are:
 pacman::p_load(tidyverse, FunnelPlotR, plotly, knitr)
 ```
 
-## **12.3 Importing Data**
+## **8.3 Importing Data**
 
 In this section, COVID-19_DKI_Jakarta will be used. The data was downloaded from [Open Data Covid-19 Provinsi DKI Jakarta portal](https://riwayat-file-covid-19-dki-jakarta-jakartagis.hub.arcgis.com/). For this hands-on exercise, we are going to compare the cumulative COVID-19 cases and death by sub-district (i.e. kelurahan) as at 31st July 2021, DKI Jakarta.
 
