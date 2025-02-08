@@ -1,0 +1,17 @@
+{
+  "hash": "66c82d71aa7365bf532e0214b32b56ec",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"In-class_Ex04\"\nauthor: \"Ding Hong Yan\"\ndate-modified: \"last-modified\" \nexecute:\n  echo: true\n  eval: true\n  warning: false\n  freeze: true\n---\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(haven, SmartEDA, tidyverse, tidymodels)\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nexam_data <- read_csv(\"data/Exam_data.csv\")\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nchurn_telecom <-\n  read_sas(\"data/churn_telecom.sas7bdat\")%>%\n  mutate(CHURN_FLG = factor(\n    CHURN_FLG,\n    levels= c(\"1\", \"0\"),\n    labels= c(\"Churn\", \"Non-Churn\")\n  ))\n```\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nggplot(data= exam_data,\n       aes(x = ENGLISH,\n           y = CLASS)) +\n  geom_boxplot()\n```\n\n::: {.cell-output-display}\n![](In-class_Ex04_files/figure-html/unnamed-chunk-4-1.png){width=672}\n:::\n:::\n",
+    "supporting": [
+      "In-class_Ex04_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
