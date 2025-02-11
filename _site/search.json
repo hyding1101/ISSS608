@@ -642,5 +642,68 @@
     "title": "ISSS608",
     "section": "",
     "text": "Welcome to ISSS608 Visual Analytics and Applications."
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on_Ex09/Hands-On_Ex09.html",
+    "href": "Hands-on_Exercise/Hands-on_Ex09/Hands-On_Ex09.html",
+    "title": "Hands-on_Ex09",
+    "section": "",
+    "text": "Ternary plots are a way of displaying the distribution and variability of three-part compositional data. (For example, the proportion of aged, economy active and young population or sand, silt, and clay in soil.) It’s display is a triangle with sides scaled from 0 to 1. Each side represents one of the three components. A point is plotted so that a line drawn perpendicular from the point to each leg of the triangle intersect at the component values of the point.\nIn this hands-on, you will learn how to build ternary plot programmatically using R for visualising and analysing population structure of Singapore.\nThe hands-on exercise consists of four steps:\n\nInstall and launch tidyverse and ggtern packages.\nDerive three new measures using mutate() function of dplyr package.\nBuild a static ternary plot using ggtern() function of ggtern package.\nBuild an interactive ternary plot using plot-ly() function of Plotly R package."
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on_Ex09/Hands-On_Ex09.html#overview",
+    "href": "Hands-on_Exercise/Hands-on_Ex09/Hands-On_Ex09.html#overview",
+    "title": "Hands-on_Ex09",
+    "section": "",
+    "text": "Ternary plots are a way of displaying the distribution and variability of three-part compositional data. (For example, the proportion of aged, economy active and young population or sand, silt, and clay in soil.) It’s display is a triangle with sides scaled from 0 to 1. Each side represents one of the three components. A point is plotted so that a line drawn perpendicular from the point to each leg of the triangle intersect at the component values of the point.\nIn this hands-on, you will learn how to build ternary plot programmatically using R for visualising and analysing population structure of Singapore.\nThe hands-on exercise consists of four steps:\n\nInstall and launch tidyverse and ggtern packages.\nDerive three new measures using mutate() function of dplyr package.\nBuild a static ternary plot using ggtern() function of ggtern package.\nBuild an interactive ternary plot using plot-ly() function of Plotly R package."
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on_Ex09/Hands-On_Ex09.html#installing-and-launching-r-packages",
+    "href": "Hands-on_Exercise/Hands-on_Ex09/Hands-On_Ex09.html#installing-and-launching-r-packages",
+    "title": "Hands-on_Ex09",
+    "section": "9.2 Installing and launching R packages",
+    "text": "9.2 Installing and launching R packages\nFor this exercise, two main R packages will be used in this hands-on exercise, they are:\n\nggtern, a ggplot extension specially designed to plot ternary diagrams. The package will be used to plot static ternary plots.\nPlotly R, an R package for creating interactive web-based graphs via plotly’s JavaScript graphing library, plotly.js . The plotly R libary contains the ggplotly function, which will convert ggplot2 figures into a Plotly object.\n\nWe will also need to ensure that selected tidyverse family packages namely: readr, dplyr and tidyr are also installed and loaded.\nIn this exercise, version 3.2.1 of ggplot2 will be installed instead of the latest version of ggplot2. This is because the current version of ggtern package is not compatible to the latest version of ggplot2.\nThe code chunks below will accomplish the task.\n\npacman::p_load(plotly, ggtern, tidyverse)"
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on_Ex09/Hands-On_Ex09.html#data-preparation",
+    "href": "Hands-on_Exercise/Hands-on_Ex09/Hands-On_Ex09.html#data-preparation",
+    "title": "Hands-on_Ex09",
+    "section": "9.3 Data Preparation",
+    "text": "9.3 Data Preparation\n\n9.3.1 The data\nFor the purpose of this hands-on exercise, the Singapore Residents by Planning AreaSubzone, Age Group, Sex and Type of Dwelling, June 2000-2018 data will be used. The data set has been downloaded and included in the data sub-folder of the hands-on exercise folder. It is called respopagsex2000to2018_tidy.csv and is in csv file format.\n\n\n9.3.2 Importing Data\nTo important respopagsex2000to2018_tidy.csv into R, read_csv() function of readr package will be used.\n\npop_data &lt;- read_csv(\"data/respopagsex2000to2018_tidy.csv\") \n\n\n\n9.3.3 Preparing the Data\nNext, use the mutate() function of dplyr package to derive three new measures, namely: young, active, and old.\n\nagpop_mutated &lt;- pop_data %&gt;%\n  mutate(`Year` = as.character(Year))%&gt;%\n  spread(AG, Population) %&gt;%\n  mutate(YOUNG = rowSums(.[4:8]))%&gt;%\n  mutate(ACTIVE = rowSums(.[9:16]))  %&gt;%\n  mutate(OLD = rowSums(.[17:21])) %&gt;%\n  mutate(TOTAL = rowSums(.[22:24])) %&gt;%\n  filter(Year == 2018)%&gt;%\n  filter(TOTAL &gt; 0)\n\n\n\n\n\n\n\nspread(AG, Population)\n\n\n\nThe spread() function expands the values in the AG column into multiple new columns, using Population as the corresponding values.\nExample: Before Transformation (pop_data original format)\n\n\n\nYear\nAG\nPopulation\n\n\n\n\n2018\n0-4\n50000\n\n\n2018\n5-9\n52000\n\n\n2018\n10-14\n53000\n\n\n\nAfter Transformation (spread() or pivot_wider())\n\n\n\nYear\n0-4\n5-9\n10-14\n\n\n\n\n2018\n50000\n52000\n53000\n\n\n\n\n\n\n\n\n\n\n\nmutate(YOUNG = rowSums(.[4:8]))\n\n\n\n\n.[4:8] refers to columns 4 to 8, which should correspond to age groups 0-4 to 20-24 years.\nrowSums() computes the sum across these columns, representing the total population of the young age group."
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on_Ex09/Hands-On_Ex09.html#plotting-ternary-diagram-with-r",
+    "href": "Hands-on_Exercise/Hands-on_Ex09/Hands-On_Ex09.html#plotting-ternary-diagram-with-r",
+    "title": "Hands-on_Ex09",
+    "section": "9.4 Plotting Ternary Diagram with R",
+    "text": "9.4 Plotting Ternary Diagram with R\n\n9.4.1 4.1 Plotting a static ternary diagram\nUse ggtern() function of ggtern package to create a simple ternary plot.\n\nggtern(data=agpop_mutated,aes(x=YOUNG,y=ACTIVE, z=OLD)) +\n  geom_point()\n\n\n\n\n\n\n\n\n\nggtern(data=agpop_mutated, aes(x=YOUNG,y=ACTIVE, z=OLD)) +\n  geom_point() +\n  labs(title=\"Population structure, 2015\") +\n  theme_rgbw()\n\n\n\n\n\n\n\n\n\n\n9.4.2 Plotting an interative ternary diagram\nThe code below create an interactive ternary plot using plot_ly() function of Plotly R.\n\nlabel &lt;- function(txt) {\n  list(\n    text = txt, \n    x = 0.1, y = 1,\n    ax = 0, ay = 0,\n    xref = \"paper\", yref = \"paper\", \n    align = \"center\",\n    font = list(family = \"serif\", size = 15, color = \"white\"),\n    bgcolor = \"#b3b3b3\", bordercolor = \"black\", borderwidth = 2\n  )\n}\n\n# reusable function for axis formatting\naxis &lt;- function(txt) {\n  list(\n    title = txt, tickformat = \".0%\", tickfont = list(size = 10)\n  )\n}\n\nternaryAxes &lt;- list(\n  aaxis = axis(\"Young\"), \n  baxis = axis(\"Active\"), \n  caxis = axis(\"Old\")\n)\n\n# Initiating a plotly visualization \nplot_ly(\n  agpop_mutated, \n  a = ~YOUNG, \n  b = ~ACTIVE, \n  c = ~OLD, \n  color = I(\"black\"), \n  type = \"scatterternary\"\n) %&gt;%\n  layout(\n    annotations = label(\"Ternary Markers\"), \n    ternary = ternaryAxes\n  )\n\n\n\n\n\n\n\n\n\n\n\nTernary Plot Explanation\n\n\n\nA Ternary Plot is a visualization tool for displaying three interrelated variables whose total sum is fixed at 1 (or 100%). It is widely used in fields such as geology, chemistry, economics, and ecology to analyze proportional compositions.\n1. Structure of a Ternary Plot\nA ternary plot is an equilateral triangle, where each vertex represents a variable (A, B, C). Each point inside the triangle represents a combination of the three variables. For example:\n\nVertex A (100%, 0%, 0%)\nVertex B (0%, 100%, 0%)\nVertex C (0%, 0%, 100%)\n\nThis type of plot is suitable for data where the total proportion is always 100% (or 1.0).\n2. How to Analyze a Ternary Plot\n\nTrend Analysis\n\nIf data points cluster near a particular vertex, it indicates that this variable has a high proportion.\nIf data points are evenly distributed, the three variables are relatively balanced.\n\nClustering and Patterns\n\nLook for clusters of data points, which can indicate different groups.\nUseful for market segmentation, rock classification, and other analytical applications.\n\nImpact of Mixtures\n\nAnalyze how different component ratios affect outcomes, such as the effect of cement composition on strength.\n\n\n\nSummary\n\nTernary plots are used for three variables that sum to 1 (or 100%).\nEach point inside the triangle represents a different combination of the three variables.\nApplications include market analysis, chemistry, geology, and ecology.\nAnalysis methods include identifying trends, clusters, and the influence of different proportions."
+  },
+  {
+    "objectID": "Hands-on_Exercise/Hands-on_Ex09/Hands-On_Ex09.html#summary",
+    "href": "Hands-on_Exercise/Hands-on_Ex09/Hands-On_Ex09.html#summary",
+    "title": "Hands-on_Ex09",
+    "section": "Summary",
+    "text": "Summary\n\nTernary plots are used for three variables that sum to 1 (or 100%).\nEach point inside the triangle represents a different combination of the three variables.\nApplications include market analysis, chemistry, geology, and ecology.\nAnalysis methods include identifying trends, clusters, and the influence of different proportions."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html",
+    "title": "Take-home_Ex01",
+    "section": "",
+    "text": "An international media company that publishes weekly content on digital platforms is planning to release articles on the following themes:\n\nShip Performance in the Gulf of Guinea\n\n\n\n\nIn this exercise, Exploratory Data Analysis (EDA) methods and ggplot functions are used to explore:\n\nthe relationship between ship performance with Ship_Type, Engine_Type, Engine_Power_kW, and Weather_Condition.\nthe operating costs and revenues of different route types to identify the most profitable route."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#overview",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#overview",
+    "title": "Take-home_Ex01",
+    "section": "",
+    "text": "An international media company that publishes weekly content on digital platforms is planning to release articles on the following themes:\n\nShip Performance in the Gulf of Guinea\n\n\n\n\nIn this exercise, Exploratory Data Analysis (EDA) methods and ggplot functions are used to explore:\n\nthe relationship between ship performance with Ship_Type, Engine_Type, Engine_Power_kW, and Weather_Condition.\nthe operating costs and revenues of different route types to identify the most profitable route."
+  },
+  {
+    "objectID": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#getting-started",
+    "href": "Take-home_Ex/Take-home_Ex01/Take-home_Ex01.html#getting-started",
+    "title": "Take-home_Ex01",
+    "section": "Getting started",
+    "text": "Getting started\nWe load the following R packages using the pacman::p_load() function:\n\ntidyverse: Core collection of R packages designed for data science\nggrepel: to provides geoms for ggplot2 to repel overlapping text labels\nggthemes: to use additional themes for ggplot2\npatchwork: to prepare composite figure created using ggplot2\nggridges: to plot ridgeline plots\nggdist: for visualizations of distributions and uncertainty\nscales: provides the internal scaling infrastructure used by ggplot2\n\n\npacman::p_load(tidyverse, haven,\n               ggrepel, ggthemes,\n               ggridges, ggdist,\n               patchwork, scales)\n\n\nImport data\nIn this project, Ship Performance in the Gulf of Guinea will be used. The data was downloaded from kaggle website.\nThe code chunk below imports the data into R and save it into a tibble data frame object called ship_pf.\n\nship_pf &lt;- read_csv(\"data/Ship_Performance_Dataset.csv\")"
   }
 ]

@@ -1,0 +1,15 @@
+{
+  "hash": "ffc669743800d71379eff350ca0f0a28",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Take-home_Ex01\"\nauthor: \"Ding Hong Yan\"\ndate-modified: \"last-modified\" \nexecute:\n  echo: true\n  eval: true\n  warning: false\n  freeze: true\n---\n\n\n\n\n\n## Overview\n\n### **Setting the scene**\n\nAn international media company that publishes weekly content on digital platforms is planning to release articles on the following themes:\n\n-   Ship Performance in the Gulf of Guinea\n\n### **The Task**\n\nIn this exercise, Exploratory Data Analysis (EDA) methods and ggplot functions are used to explore:\n\n-   the relationship between ship performance with Ship_Type, Engine_Type, Engine_Power_kW, and Weather_Condition.\n\n-   the operating costs and revenues of different route types to identify the most profitable route.\n\n## Getting started\n\nWe load the following R packages using the `pacman::p_load()` function:\n\n-   **tidyverse**: Core collection of R packages designed for data science\n\n-   **ggrepel**: to provides geoms for **ggplot2** to repel overlapping text labels\n\n-   **ggthemes**: to use additional themes for **ggplot2**\n\n-   **patchwork**: to prepare composite figure created using **ggplot2**\n\n-   **ggridges**: to plot ridgeline plots\n\n-   **ggdist**: for visualizations of distributions and uncertainty\n\n-   **scales**: provides the internal scaling infrastructure used by **ggplot2**\n\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\npacman::p_load(tidyverse, haven,\n               ggrepel, ggthemes,\n               ggridges, ggdist,\n               patchwork, scales)\n```\n:::\n\n\n\n\n\n### Import data\n\nIn this project, Ship Performance in the Gulf of Guinea will be used. **The data was downloaded from [kaggle website](https://www.kaggle.com/datasets/jeleeladekunlefijabi/ship-performance-clustering-dataset?resource=download).**\n\n**The code chunk below imports the data into R and save it into a tibble data frame object called *ship_pf*.**\n\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nship_pf <- read_csv(\"data/Ship_Performance_Dataset.csv\")\n```\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -1,7 +1,6 @@
 ---
-title: "Take-home Exercise 1"
+title: "Take-home_Ex01"
 author: "Ding Hong Yan"
-date: "February 1, 2025"
 date-modified: "last-modified" 
 execute:
   echo: true
@@ -9,3 +8,54 @@ execute:
   warning: false
   freeze: true
 ---
+
+## Overview
+
+### **Setting the scene**
+
+An international media company that publishes weekly content on digital platforms is planning to release articles on the following themes:
+
+-   Ship Performance in the Gulf of Guinea
+
+### **The Task**
+
+In this exercise, Exploratory Data Analysis (EDA) methods and ggplot functions are used to explore:
+
+-   the relationship between ship performance with Ship_Type, Engine_Type, Engine_Power_kW, and Weather_Condition.
+
+-   the operating costs and revenues of different route types to identify the most profitable route.
+
+## Getting started
+
+We load the following R packages using the `pacman::p_load()` function:
+
+-   **tidyverse**: Core collection of R packages designed for data science
+
+-   **ggrepel**: to provides geoms for **ggplot2** to repel overlapping text labels
+
+-   **ggthemes**: to use additional themes for **ggplot2**
+
+-   **patchwork**: to prepare composite figure created using **ggplot2**
+
+-   **ggridges**: to plot ridgeline plots
+
+-   **ggdist**: for visualizations of distributions and uncertainty
+
+-   **scales**: provides the internal scaling infrastructure used by **ggplot2**
+
+```{r}
+pacman::p_load(tidyverse, haven,
+               ggrepel, ggthemes,
+               ggridges, ggdist,
+               patchwork, scales)
+```
+
+### Import data
+
+In this project, Ship Performance in the Gulf of Guinea will be used. **The data was downloaded from [kaggle website](https://www.kaggle.com/datasets/jeleeladekunlefijabi/ship-performance-clustering-dataset?resource=download).**
+
+**The code chunk below imports the data into R and save it into a tibble data frame object called *ship_pf*.**
+
+```{r}
+ship_pf <- read_csv("data/Ship_Performance_Dataset.csv")
+```
