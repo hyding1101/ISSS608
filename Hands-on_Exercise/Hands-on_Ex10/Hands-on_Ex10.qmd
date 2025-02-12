@@ -1,5 +1,5 @@
 ---
-title: "Hands-on_Ex10"
+title: "10 Visual Correlation Analysis"
 author: "Ding Hong Yan"
 date-modified: "last-modified" 
 execute:
@@ -262,7 +262,7 @@ corrplot(wine.cor,
 |--------|-------------|
 
 |  |  |
-|----------------|--------------------------------------------------------|
+|----|----|
 | `"circle"` | Default. Uses **colored circles** (bigger = stronger correlation). |
 
 |            |                                               |
