@@ -21,9 +21,9 @@ An international media company that publishes weekly content on digital platform
 
 In this exercise, Exploratory Data Analysis (EDA) methods and ggplot functions are used to:
 
--   Understand the operational costs and revenues of different route types to identify the most profitable routes.
+-   Understand which types of shipping routes have the highest profitability
 
--   Reduce the operation of high-cost, low-revenue routes to enhance profitability.
+-   Explore the factors that influence operational costs and profitability to optimize route selection and business strategies
 
 ## 2. Getting started
 
@@ -31,24 +31,29 @@ We load the following R packages using the `pacman::p_load()` function:
 
 -   [**tidyverse**](https://www.tidyverse.org/): Core collection of R packages designed for data science
 
--   [**ggthemes**](https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/): to use additional themes for **ggplot2**
+-   [**ggthemes**](https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/): to use additional themes for ggplot2
 
--   [**patchwork**](https://patchwork.data-imaginist.com/): to prepare composite figure created using **ggplot2**
+-   [**patchwork**](https://patchwork.data-imaginist.com/): to prepare composite figure created using ggplot2
 
 -   [**ggridges**](https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html): to plot ridgeline plots
 
 -   [**ggdist**](https://mjskay.github.io/ggdist/): for visualizations of distributions and uncertainty
 
--   [**scales**](https://scales.r-lib.org/): provides the internal scaling infrastructure used by **ggplot2**
+-   [**scales**](https://scales.r-lib.org/): provides the internal scaling infrastructure used by ggplot2
 
--   [**plotly**](https://plotly.com/r/)**, R library for plotting interactive statistical graphs**
+-   [**plotly**](https://plotly.com/ggplot2/getting-started/)**:** R library for plotting interactive statistical graphs
+
+-   [**ggstatsplot**](https://indrajeetpatil.github.io/ggstatsplot/): Based Plots with Statistical Details
+
+-   [**ggpubr**](https://github.com/kassambara/ggpubr): For publication-ready plots
 
 ```{r}
 pacman::p_load(tidyverse,ggthemes,
                ggridges, ggdist,
                patchwork, scales,
                corrplot, ggstatsplot, 
-               plotly)
+               plotly,ggpubr,
+               performance)
 ```
 
 ### 2.1 Import data
@@ -284,12 +289,17 @@ ggscatterstats(
 
 ### 4.3 Relationship **between** Operational Cost **and** Seasonal Impact     
 
-Seasonal_Impact_Score
+Next, we want to check whether seasonal impact has a noticeable influence on operational costs.
+
+The ggplot() function from the ggplot2 package is used to generate a scatter plot that examines the relationship between Seasonal_Impact_Score and Operational_Cost_USD in the ship_pf dataset.
+
+To further investigate the potential relationship, the **geom_smooth()** function is used to overlay a linear regression line in red, with the **se = FALSE** argument to exclude the confidence interval shading. The **theme_minimal()** function is applied to ensure a clean and simple visual style, while the **labs()** function customizes the plot title and axis labels for better readability.
 
 ::: panel-tabset
 ## The plot
 
 ```{r}
+#| echo: false
 ggplot(ship_pf, aes(x = Seasonal_Impact_Score, y = Operational_Cost_USD)) +
   geom_point(alpha = 0.5, color = "purple") +
   geom_smooth(method = "lm", se = FALSE, color = "red") +
@@ -313,6 +323,40 @@ ggplot(ship_pf, aes(x = Seasonal_Impact_Score, y = Operational_Cost_USD)) +
 ```
 :::
 
+***Observation***: Based on the chart above, we can observe a slight increase in operational costs as the seasonal impact score rises. This suggests that seasonal impact may have some influence on operational costs, but the effect is not particularly strong. Therefore, we believe that there may be other factors influencing the cost.
+
+### 4.4 Relationship **between** Operational Cost **and** Fuel Efficiency  
+
+We want to check whether fuel efficiency has a noticeable influence on operational costs.
+
+The ggplot() function from the ggplot2 package is used to generate a scatter plot that examines the relationship between Efficiency_nm_per_kWh and Operational_Cost_USD in the ship_pf dataset.
+
+To further investigate the potential relationship, the **geom_smooth()** function is used to overlay a linear regression line in red, with the **se = FALSE** argument to exclude the confidence interval shading. The **theme_minimal()** function is applied to ensure a clean and simple visual style, while the **labs()** function customizes the plot title and axis labels for better readability.
+
+```{r}
+#| message: false
+#| warning: false
+ggplot(ship_pf, aes(x = Efficiency_nm_per_kWh, y = Operational_Cost_USD)) +
+  geom_point(alpha = 0.5, color = "orange") +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  theme_minimal() +
+  labs(title = "Operational Cost vs. Fuel Efficiency",
+       x = "Fuel Efficiency (nm per liter)",
+       y = "Operational Cost (USD)")
+```
+
+***Observation***: Based on the chart above, we can observe that there is no significant change in operational costs as fuel efficiency increases. This suggests that fuel efficiency may not have a substantial impact on operational costs.
+
+In our analysis of three factors influencing operational costs, we found that only seasonal impact exhibited a noticeable effect, whereas the other two factors—travel distance and fuel efficiency—appeared to have little to no impact. This could be attributed to the multifaceted nature of operational costs, which are likely influenced by a combination of factors rather than being determined by a single variable. External elements such as maintenance expenses, labor costs, and route-specific conditions may play a more significant role in shaping overall expenditures. Given these complexities, a more comprehensive approach is required to fully understand cost determinants. This presents an opportunity for future research to explore potential interactions among multiple variables and their collective influence on operational costs.
+
+### 4.5 Relationship **between** Revenue per Voyage **and** Distance Traveled
+
+As we know that the long-haul route type has the highest profit among all route types, we want to check whether the distance traveled influences the revenue per voyage.
+
+The `ggscatterstats()` function from the ggstatsplot package is used to create a scatter plot that visualizes the relationship between Distance_Traveled_nm and Operational_Cost_USD in the `ship_pf` dataset. This function also overlays a regression line and provides detailed statistical annotations.
+
+The marginal = FALSE argument disables marginal histograms or density plots, focusing the visualization solely on the scatter plot and regression analysis. The black scatter points represent individual data points, while the blue regression line provides a visual representation of the trend.
+
 ```{r}
 ggscatterstats(
   data = ship_pf,
@@ -323,66 +367,86 @@ ggscatterstats(
 
 ```
 
+***Observation***: Based on the chart above, we can observe that there is the slight increase for revenue as the distance traveled rise. This suggests that distance traveled may have some influence on revenue per voyage. The statistical analysis further supports this conclusion, as the Pearson correlation coefficient is 0.05, indicating a weak positive correlation. The p-value (0.00966) is below the 0.05 threshold, suggesting statistical significance. However, the data indicates that there is only a weak positive correlation between them. This implies that while the relationship is statistically significant, its impact on operational costs is not that substantial.
+
+### 4.6 An Exploration of Factors Potentially Impacting Revenue
+
+**The code chunk below is used to calibrate a multiple linear regression model by using *lm()* of Base Stats of R.**
+
 ```{r}
-ggplot(ship_pf, aes(x = Distance_Traveled_nm, y = Revenue_per_Voyage_USD)) +
-  geom_point(alpha = 0.5, color = "green") +
-  geom_smooth(method = "lm", se = FALSE, color = "blue") +
-  theme_minimal() +
-  labs(title = "Revenue vs. Distance Traveled",
-       x = "Distance Traveled (nautical miles)",
-       y = "Revenue per Voyage (USD)")
+model <- lm(Revenue_per_Voyage_USD ~ Distance_Traveled_nm + Turnaround_Time_hours + Weekly_Voyage_Count + 
+              Efficiency_nm_per_kWh + Seasonal_Impact_Score, data = ship_pf)
+model
 
 ```
 
-```{r}
-ggplot(ship_pf, aes(x = Seasonal_Impact_Score, y = Operational_Cost_USD)) +
-  geom_point(alpha = 0.5, color = "purple") +
-  geom_smooth(method = "lm", se = FALSE, color = "red") +
-  theme_minimal() +
-  labs(title = "Operational Cost vs. Seasonal Impact",
-       x = "Seasonal Impact Score",
-       y = "Operational Cost (USD)")
+The code above constructs a linear regression model aimed at predicting **Revenue_per_Voyage_USD** (voyage revenue). Here, **Revenue_per_Voyage_USD** serves as the dependent variable (the target variable), while **Distance_Traveled_nm** (distance traveled in nautical miles), **Turnaround_Time_hours** (turnaround time in hours), **Weekly_Voyage_Count** (number of weekly voyages), **Efficiency_nm_per_kWh** (energy efficiency in nautical miles per kilowatt-hour), and **Seasonal_Impact_Score** (seasonal impact factor) act as the independent variables (the predictors).
 
-```
+The code chunk below will be used to check the collinearity.
 
 ```{r}
-ggplot(ship_pf, aes(x = Efficiency_nm_per_kWh, y = Operational_Cost_USD)) +
-  geom_point(alpha = 0.5, color = "orange") +
-  geom_smooth(method = "lm", se = FALSE, color = "blue") +
-  theme_minimal() +
-  labs(title = "Operational Cost vs. Fuel Efficiency",
-       x = "Fuel Efficiency (nm per liter)",
-       y = "Operational Cost (USD)")
-
+check_c <- check_collinearity(model)
+plot(check_c)
 ```
+
+Based on the chart above, we can observe that all predictor variables (Distance_Traveled_nm, Efficiency_nm_per_kWh, Seasonal_Impact_Score, Turnaround_Time_hours, and Weekly_Voyage_Count) have Variance Inflation Factors (VIF) below 5, indicating low multicollinearity. This suggests that there is no severe correlation between the independent variables, which is beneficial for the stability of the regression model.
+
+Next, we will check the normality.
 
 ```{r}
-ggplot(ship_pf, aes(x = Route_Type, y = Turnaround_Time_hours, fill = Route_Type)) +
-  geom_boxplot() +
-  theme_minimal() +
-  labs(title = "Turnaround Time Across Route Types",
-       x = "Route Type",
-       y = "Turnaround Time (hours)")
-
-
+#| message: false
+#| warning: false
+check_n <- check_normality(model)
+plot(check_n)
 ```
+
+Based on the chart above, we can observe that while most residuals follow the expected normal distribution, the points at both tails deviate significantly from the straight line. This suggests the presence of heavy tails, indicating that extreme values deviate from normality.
+
+The middle section of the Q-Q plot aligns closely with the diagonal reference line, meaning that the majority of residuals approximate a normal distribution. However, the deviation at the tails implies that the assumption of normality is violated in extreme cases. Further investigation, such as applying transformations or identifying influential points, may be necessary to improve model assumptions.
+
+In the code below, [*ggcoefstats()*](https://indrajeetpatil.github.io/ggstatsplot/reference/ggcoefstats.html) of ggstatsplot package to visualise the parameters of a regression model.
 
 ```{r}
-ggplot(ship_pf, aes(x = Engine_Power_kW, y = Operational_Cost_USD)) +
-  geom_point(alpha = 0.5, color = "darkblue") +
-  geom_smooth(method = "lm", se = FALSE, color = "red") +
-  theme_minimal() +
-  labs(title = "Operational Cost vs. Engine Power",
-       x = "Engine Power (kW)",
-       y = "Operational Cost (USD)")
-
+ggcoefstats(model, 
+            output = "plot")
 ```
 
-```{r}
-high_cost_low_profit <- ship_pf %>%
-  filter(Profit < 0 & Operational_Cost_USD > median(Operational_Cost_USD)) %>%
-  select(Route_Type, Distance_Traveled_nm, Operational_Cost_USD, Revenue_per_Voyage_USD,Profit)
+Based on the chart above, we can observe that Distance_Traveled_nm is the only statistically significant variable in the model (p = 0.01). The positive coefficient (β̂ = 23.32) suggests that as the distance traveled increases, the revenue per voyage also rises. This indicates that distance traveled has a measurable influence on revenue, albeit with a relatively small effect size.
 
-print(high_cost_low_profit)
+However, other variables, including Turnaround_Time_hours, Weekly_Voyage_Count, Efficiency_nm_per_kWh, and Seasonal_Impact_Score, have p-values well above the 0.05 significance threshold, suggesting that they do not have a statistically significant impact on revenue in this model.
 
-```
+It is important to note that the normality of residuals is questionable, as shown in the Q-Q plot (second chart). The presence of heavy tails suggests potential outliers or a non-normal error distribution, which may affect the reliability of the statistical inference, particularly the p-values. Future research should consider nonlinear models to improve prediction accuracy.
+
+## 5. Summary
+
+Our analysis of ship performance in the Gulf of Guinea and the relationship between factors that may influence operational costs and revenue revealed that the long-haul route type has the highest profit among all route types.
+
+Key Findings:
+
+-   The long-haul route type has the highest profit among all route types
+
+-   The seasonal impact has slight influence on the operational cost
+
+-   From a single-factor perspective, distance traveled or fuel efficiency alone does not have a significant impact on operational cost
+
+-   The revenue will slightly increase as the distance traveled rise
+
+-   From a single-factor perspective, only distance traveled has a slight impact on revenue per voyage, other factor alone does not have a significant impact on operational cost
+
+Recommendations for future research:
+
+-   **Confirmatory data analysis:** Future studies could incorporate additional statistical tests to validate the findings from this exploratory data analysis and establish more definitive correlations and causation.
+
+-   **Exploring Additional Variables**: A more comprehensive analysis that incorporates a wider range of variables could provide deeper insights into cost and revenue. Examining the combined effects of multiple factors, rather than focusing on a single variable, is crucial for understanding their overall impact. Additionally, exploring interactions between operational efficiency, market conditions, and resource allocation warrants further investigation to assess their influence on financial outcomes.
+
+By addressing these areas, future research can provide a more comprehensive understanding of the various factors that influence vessel costs and revenue, thereby aiding in the development of the most profitable shipping routes and operational models.
+
+## 6. Reference
+
+-   [R for Visual Analytics](https://r4va.netlify.app/).
+
+-   [R for Data Science](https://r4ds.hadley.nz/).
+
+-   [Fundamentals of Data Visualisation](https://clauswilke.com/dataviz/).
+
+-   [Kaggle](https://www.kaggle.com/datasets/jeleeladekunlefijabi/ship-performance-clustering-dataset)
