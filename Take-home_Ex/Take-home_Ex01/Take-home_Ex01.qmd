@@ -333,7 +333,11 @@ The ggplot() function from the ggplot2 package is used to generate a scatter plo
 
 To further investigate the potential relationship, the **geom_smooth()** function is used to overlay a linear regression line in red, with the **se = FALSE** argument to exclude the confidence interval shading. The **theme_minimal()** function is applied to ensure a clean and simple visual style, while the **labs()** function customizes the plot title and axis labels for better readability.
 
+::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
 #| message: false
 #| warning: false
 ggplot(ship_pf, aes(x = Efficiency_nm_per_kWh, y = Operational_Cost_USD)) +
@@ -344,6 +348,19 @@ ggplot(ship_pf, aes(x = Efficiency_nm_per_kWh, y = Operational_Cost_USD)) +
        x = "Fuel Efficiency (nm per liter)",
        y = "Operational Cost (USD)")
 ```
+
+## The code
+
+```{r, echo=TRUE, eval=FALSE}
+ggplot(ship_pf, aes(x = Efficiency_nm_per_kWh, y = Operational_Cost_USD)) +
+  geom_point(alpha = 0.5, color = "orange") +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  theme_minimal() +
+  labs(title = "Operational Cost vs. Fuel Efficiency",
+       x = "Fuel Efficiency (nm per liter)",
+       y = "Operational Cost (USD)")
+```
+:::
 
 ***Observation***: Based on the chart above, we can observe that there is no significant change in operational costs as fuel efficiency increases. This suggests that fuel efficiency may not have a substantial impact on operational costs.
 
@@ -357,15 +374,32 @@ The `ggscatterstats()` function from the ggstatsplot package is used to create a
 
 The marginal = FALSE argument disables marginal histograms or density plots, focusing the visualization solely on the scatter plot and regression analysis. The black scatter points represent individual data points, while the blue regression line provides a visual representation of the trend.
 
+::: panel-tabset
+## The plot
+
 ```{r}
+#| echo: false
+#| message: false
+#| warning: false
 ggscatterstats(
   data = ship_pf,
   x = Distance_Traveled_nm,
   y = Revenue_per_Voyage_USD,
   marginal = FALSE,
   )
-
 ```
+
+## The code
+
+```{r, echo=TRUE, eval=FALSE}
+ggscatterstats(
+  data = ship_pf,
+  x = Distance_Traveled_nm,
+  y = Revenue_per_Voyage_USD,
+  marginal = FALSE,
+  )
+```
+:::
 
 ***Observation***: Based on the chart above, we can observe that there is the slight increase for revenue as the distance traveled rise. This suggests that distance traveled may have some influence on revenue per voyage. The statistical analysis further supports this conclusion, as the Pearson correlation coefficient is 0.05, indicating a weak positive correlation. The p-value (0.00966) is below the 0.05 threshold, suggesting statistical significance. However, the data indicates that there is only a weak positive correlation between them. This implies that while the relationship is statistically significant, its impact on operational costs is not that substantial.
 
