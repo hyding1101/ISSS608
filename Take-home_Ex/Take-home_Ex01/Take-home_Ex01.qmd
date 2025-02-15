@@ -9,48 +9,49 @@ execute:
   freeze: true
 ---
 
-## Overview
+## 1. Overview
 
-### **Setting the scene**
+### **1.1 Setting the scene**
 
 An international media company that publishes weekly content on digital platforms is planning to release articles on the following themes:
 
 -   Ship Performance in the Gulf of Guinea
 
-### **The Task**
+### **1.2 The Task**
 
-In this exercise, Exploratory Data Analysis (EDA) methods and ggplot functions are used to explore:
+In this exercise, Exploratory Data Analysis (EDA) methods and ggplot functions are used to:
 
--   the relationship between ship performance with Ship_Type, Engine_Type, Engine_Power_kW, and Weather_Condition.
+-   Understand the operational costs and revenues of different route types to identify the most profitable routes.
 
--   the operating costs and revenues of different route types to identify the most profitable route.
+-   Reduce the operation of high-cost, low-revenue routes to enhance profitability.
 
-## Getting started
+## 2. Getting started
 
 We load the following R packages using the `pacman::p_load()` function:
 
--   **tidyverse**: Core collection of R packages designed for data science
+-   [**tidyverse**](https://www.tidyverse.org/): Core collection of R packages designed for data science
 
--   **ggrepel**: to provides geoms for **ggplot2** to repel overlapping text labels
+-   [**ggthemes**](https://yutannihilation.github.io/allYourFigureAreBelongToUs/ggthemes/): to use additional themes for **ggplot2**
 
--   **ggthemes**: to use additional themes for **ggplot2**
+-   [**patchwork**](https://patchwork.data-imaginist.com/): to prepare composite figure created using **ggplot2**
 
--   **patchwork**: to prepare composite figure created using **ggplot2**
+-   [**ggridges**](https://cran.r-project.org/web/packages/ggridges/vignettes/introduction.html): to plot ridgeline plots
 
--   **ggridges**: to plot ridgeline plots
+-   [**ggdist**](https://mjskay.github.io/ggdist/): for visualizations of distributions and uncertainty
 
--   **ggdist**: for visualizations of distributions and uncertainty
+-   [**scales**](https://scales.r-lib.org/): provides the internal scaling infrastructure used by **ggplot2**
 
--   **scales**: provides the internal scaling infrastructure used by **ggplot2**
+-   [**plotly**](https://plotly.com/r/)**, R library for plotting interactive statistical graphs**
 
 ```{r}
-pacman::p_load(tidyverse, haven,
-               ggrepel, ggthemes,
+pacman::p_load(tidyverse,ggthemes,
                ggridges, ggdist,
-               patchwork, scales)
+               patchwork, scales,
+               corrplot, ggstatsplot, 
+               plotly)
 ```
 
-### Import data
+### 2.1 Import data
 
 In this project, Ship Performance in the Gulf of Guinea will be used. **The data was downloaded from [kaggle website](https://www.kaggle.com/datasets/jeleeladekunlefijabi/ship-performance-clustering-dataset?resource=download).**
 
@@ -58,4 +59,330 @@ In this project, Ship Performance in the Gulf of Guinea will be used. **The data
 
 ```{r}
 ship_pf <- read_csv("data/Ship_Performance_Dataset.csv")
+```
+
+The data, ship_pf, has 18 columns(variables) and 2,736 rows(observations).
+
+### **2.2 About Dataset**
+
+The Ship Performance Dataset is a synthetic yet realistic collection of data designed to represent key operational metrics and attributes of various ship types in the Gulf of Guinea. This dataset is tailored for maritime data analytics enthusiasts, machine learning practitioners, and professionals interested in exploring clustering, prediction, and optimization problems in the maritime industry.
+
+## **3. Data Wrangling**
+
+### **3.1 Checking for Duplicates and Missing Values**
+
+The dataset from **Ship Performance Clustering Dataset** is expected to be relatively clean. Nevertheless, due diligence checks for duplicates and missing values are still made to confirm the assumption.
+
+The `duplicated()` function in the **base** package is used to check for duplicates in `ship_pf`. There are no duplicates in the tibble data frame.
+
+```{r}
+ship_pf[duplicated(ship_pf), ]
+```
+
+Next, we will check about if there is any missing value in the dataset. The code chunk below can help us to do so.
+
+```{r}
+colSums(is.na(ship_pf))
+```
+
+The `colSums()` function in the **base** package is used to check for missing values in `ship_pf`. There are no missing values in the tibble data frame.
+
+As our objective is to determine the most profitable route type, we will focus on routes with a specified classification, excluding those categorized as "None" in this dataset.
+
+The code chunk below will be used:
+
+```{r}
+ship_pf <- ship_pf %>%
+  filter(Route_Type != "None")
+```
+
+In the next step, we will generate a new column, **Profit**, to facilitate further analysis. The following code snippet will be utilized.
+
+```{r}
+ship_pf <- ship_pf %>%
+  mutate(Profit = Revenue_per_Voyage_USD - Operational_Cost_USD)
+
+```
+
+Upon completing the aforementioned steps, we should obtain a refined dataset suitable for further analysis. Prior to proceeding, we will execute the following code to ensure that the data has been appropriately cleaned.
+
+```{r}
+print(ship_pf)
+```
+
+## **4. Exploratory Data Analysis**
+
+### 4.1 Distribution of Profits across different Route Type
+
+A ridgeline plot is created to visualize the distribution of profits across different route types in the dataset.
+
+Initially, the ggplot() function is used to map the "Profit" variable to the x-axis and the "Route_Type" variable to the y-axis. The fill aesthetic is set to represent the quantiles of the data using the after_stat() function, which calculates and groups the data into quartiles.
+
+The stat_density_ridges() function from the ggridges package is then used to create the ridgeline plot, with the `calc_ecdf` argument set to TRUE to calculate the empirical cumulative distribution function. The quantiles are set to 4, and quantile lines are included to visually distinguish the quartile boundaries.
+
+To improve the plot's visual appeal, the scale_fill_viridis_d() function is used to apply a color palette for the fill, and the plot title is added using ggtitle(). Finally, the theme() function is used to adjust the appearance, centering the title and rotating the y-axis label for better clarity.
+
+::: panel-tabset
+## The plot
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+ggplot(ship_pf, 
+       aes(x = Profit, 
+           y = Route_Type,
+           fill = factor(after_stat(quantile)))) +
+  stat_density_ridges(
+    geom = "density_ridges_gradient",
+    calc_ecdf = TRUE, 
+    quantiles = 4,
+    quantile_lines = TRUE) +
+  scale_fill_viridis_d(name = "Quartiles", alpha = 0.8) +
+  ggtitle(label = "Profit Distribution Across Different Route Types") +
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.title.y = element_text(angle=360, vjust=.5, hjust=1))
+```
+
+## The code
+
+```{r, echo=TRUE, eval=FALSE}
+#| message: false
+#| warning: false
+ggplot(ship_pf, 
+       aes(x = Profit, 
+           y = Route_Type,
+           fill = factor(after_stat(quantile)))) +
+  stat_density_ridges(
+    geom = "density_ridges_gradient",
+    calc_ecdf = TRUE, 
+    quantiles = 4,
+    quantile_lines = TRUE) +
+  scale_fill_viridis_d(name = "Quartiles", alpha = 0.8) +
+  ggtitle(label = "Profit Distribution Across Different Route Types") +
+  theme(plot.title = element_text(hjust = 0.5),
+        axis.title.y = element_text(angle=360, vjust=.5, hjust=1))
+```
+:::
+
+The table below provides an overview of the average profit associated with each route type.
+
+::: panel-tabset
+## The plot
+
+```{r}
+#| echo: false
+profit_summary <- ship_pf %>%
+  group_by(Route_Type) %>%
+  summarise(
+    Avg_Profit = mean(Profit, na.rm = TRUE),
+    Avg_Cost = mean(Operational_Cost_USD, na.rm = TRUE),
+    Avg_Revenue = mean(Revenue_per_Voyage_USD, na.rm = TRUE),
+    Count = n()
+  ) %>%
+  arrange(desc(Avg_Profit))
+
+print(profit_summary)
+```
+
+## The code
+
+```{r, echo=TRUE, eval=FALSE}
+profit_summary <- ship_pf %>%
+  group_by(Route_Type) %>%
+  summarise(
+    Avg_Profit = mean(Profit, na.rm = TRUE),
+    Avg_Cost = mean(Operational_Cost_USD, na.rm = TRUE),
+    Avg_Revenue = mean(Revenue_per_Voyage_USD, na.rm = TRUE),
+    Count = n()
+  ) %>%
+  arrange(desc(Avg_Profit))
+
+print(profit_summary)
+```
+:::
+
+The box plot below illustrates additional details regarding the various route types, including the average, maximum, and minimum profit values.
+
+::: panel-tabset
+## The plot
+
+```{r}
+#| echo: false
+p2 <- ggplot(ship_pf, aes(x = Route_Type, y = Profit, fill = Route_Type)) +
+  geom_boxplot(alpha = 0.6) +  
+  stat_summary(fun=mean, geom="point", shape=18, size=3, color="red") + 
+  theme_minimal() +
+  labs(title = "Profit Distribution by Route Type",
+       x = "Route Type",
+       y = "Net Profit (USD)") +
+  theme(legend.position = "none")  
+
+ggplotly(p2)
+
+```
+
+## The code
+
+```{r, echo=TRUE, eval=FALSE}
+p2 <- ggplot(ship_pf, aes(x = Route_Type, y = Profit, fill = Route_Type)) +
+  geom_boxplot(alpha = 0.6) +  
+  stat_summary(fun=mean, geom="point", shape=18, size=3, color="red") + 
+  theme_minimal() +
+  labs(title = "Profit Distribution by Route Type",
+       x = "Route Type",
+       y = "Net Profit (USD)") +
+  theme(legend.position = "none")  
+
+ggplotly(p2)
+
+```
+:::
+
+***Observation***: Based on the charts above, we can observe that the **Long-haul** route type demonstrates the highest profit among all route types. Also, based on the quartile lines, the profit of **Long-haul** routes tend to be higher than that of other route types. This finding aligns with the general expectation that **Long-haul** routes tend to generate higher revenue, likely due to higher pricing structures and increased demand for long-distance transportation.
+
+Future research in this area could explore the profitability trends over time and examine whether external factors, such as fuel prices, regulatory policies, and shifts in consumer demand, influence the profitability of different route types. Additionally, investigating the impact of seasonality and economic cycles on route profitability may provide further insights into optimizing logistics and revenue strategies.
+
+### 4.2 **Relationship between** Operational Cost **and** Distance Traveled
+
+As we know that the long-haul route type has the highest profit among all route types, we want to check whether the distance traveled influences the operational cost.
+
+The `ggscatterstats()` function from the ggstatsplot package is used to create a scatter plot that visualizes the relationship between Distance_Traveled_nm and Operational_Cost_USD in the `ship_pf` dataset. This function also overlays a regression line and provides detailed statistical annotations.
+
+The marginal = FALSE argument disables marginal histograms or density plots, focusing the visualization solely on the scatter plot and regression analysis. The black scatter points represent individual data points, while the blue regression line provides a visual representation of the trend.
+
+::: panel-tabset
+## The plot
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+ggscatterstats(
+  data = ship_pf,
+  x = Distance_Traveled_nm,
+  y = Operational_Cost_USD,
+  marginal = FALSE,
+  )
+
+```
+
+## The code
+
+```{r, echo=TRUE, eval=FALSE}
+ggscatterstats(
+  data = ship_pf,
+  x = Distance_Traveled_nm,
+  y = Operational_Cost_USD,
+  marginal = FALSE,
+  )
+
+```
+:::
+
+***Observation***: Based on the scatter plot, the distribution of data points suggests no clear trend between sailing distance and operating costs. If the two variables were highly correlated, a distinct linear pattern (either upward or downward) would be visible. However, the nearly uniform spread of points indicates minimal association between the two. The statistical analysis further supports this conclusion, as the Pearson correlation coefficient is close to zero (0.00945), and the p-value (0.63) is far above the 0.05 threshold, failing to reject the null hypothesis. Additionally, the Bayesian factor (BF) provides strong evidence supporting the absence of a meaningful relationship. The regression line is nearly flat, suggesting that increases in sailing distance have little impact on operating costs.
+
+### 4.3 Relationship **between** Operational Cost **and** Seasonal Impact     
+
+Seasonal_Impact_Score
+
+::: panel-tabset
+## The plot
+
+```{r}
+ggplot(ship_pf, aes(x = Seasonal_Impact_Score, y = Operational_Cost_USD)) +
+  geom_point(alpha = 0.5, color = "purple") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  theme_minimal() +
+  labs(title = "Operational Cost vs. Seasonal Impact",
+       x = "Seasonal Impact Score",
+       y = "Operational Cost (USD)")
+
+```
+
+## The code
+
+```{r, echo=TRUE, eval=FALSE}
+ggplot(ship_pf, aes(x = Seasonal_Impact_Score, y = Operational_Cost_USD)) +
+  geom_point(alpha = 0.5, color = "purple") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  theme_minimal() +
+  labs(title = "Operational Cost vs. Seasonal Impact",
+       x = "Seasonal Impact Score",
+       y = "Operational Cost (USD)")
+```
+:::
+
+```{r}
+ggscatterstats(
+  data = ship_pf,
+  x = Distance_Traveled_nm,
+  y = Revenue_per_Voyage_USD,
+  marginal = FALSE,
+  )
+
+```
+
+```{r}
+ggplot(ship_pf, aes(x = Distance_Traveled_nm, y = Revenue_per_Voyage_USD)) +
+  geom_point(alpha = 0.5, color = "green") +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  theme_minimal() +
+  labs(title = "Revenue vs. Distance Traveled",
+       x = "Distance Traveled (nautical miles)",
+       y = "Revenue per Voyage (USD)")
+
+```
+
+```{r}
+ggplot(ship_pf, aes(x = Seasonal_Impact_Score, y = Operational_Cost_USD)) +
+  geom_point(alpha = 0.5, color = "purple") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  theme_minimal() +
+  labs(title = "Operational Cost vs. Seasonal Impact",
+       x = "Seasonal Impact Score",
+       y = "Operational Cost (USD)")
+
+```
+
+```{r}
+ggplot(ship_pf, aes(x = Efficiency_nm_per_kWh, y = Operational_Cost_USD)) +
+  geom_point(alpha = 0.5, color = "orange") +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  theme_minimal() +
+  labs(title = "Operational Cost vs. Fuel Efficiency",
+       x = "Fuel Efficiency (nm per liter)",
+       y = "Operational Cost (USD)")
+
+```
+
+```{r}
+ggplot(ship_pf, aes(x = Route_Type, y = Turnaround_Time_hours, fill = Route_Type)) +
+  geom_boxplot() +
+  theme_minimal() +
+  labs(title = "Turnaround Time Across Route Types",
+       x = "Route Type",
+       y = "Turnaround Time (hours)")
+
+
+```
+
+```{r}
+ggplot(ship_pf, aes(x = Engine_Power_kW, y = Operational_Cost_USD)) +
+  geom_point(alpha = 0.5, color = "darkblue") +
+  geom_smooth(method = "lm", se = FALSE, color = "red") +
+  theme_minimal() +
+  labs(title = "Operational Cost vs. Engine Power",
+       x = "Engine Power (kW)",
+       y = "Operational Cost (USD)")
+
+```
+
+```{r}
+high_cost_low_profit <- ship_pf %>%
+  filter(Profit < 0 & Operational_Cost_USD > median(Operational_Cost_USD)) %>%
+  select(Route_Type, Distance_Traveled_nm, Operational_Cost_USD, Revenue_per_Voyage_USD,Profit)
+
+print(high_cost_low_profit)
+
 ```
