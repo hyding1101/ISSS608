@@ -287,7 +287,7 @@ ggscatterstats(
 
 ***Observation***: Based on the scatter plot, the distribution of data points suggests no clear trend between sailing distance and operating costs. If the two variables were highly correlated, a distinct linear pattern (either upward or downward) would be visible. However, the nearly uniform spread of points indicates minimal association between the two. The statistical analysis further supports this conclusion, as the Pearson correlation coefficient is close to zero (0.00945), and the p-value (0.63) is far above the 0.05 threshold, failing to reject the null hypothesis. Additionally, the Bayesian factor (BF) provides strong evidence supporting the absence of a meaningful relationship. The regression line is nearly flat, suggesting that increases in sailing distance have little impact on operating costs.
 
-### 4.3 Relationship **between** Operational Cost **and** Seasonal Impact     
+### 4.3 Relationship **between** Operational Cost **and** Seasonal Impact
 
 Next, we want to check whether seasonal impact has a noticeable influence on operational costs.
 
@@ -325,7 +325,7 @@ ggplot(ship_pf, aes(x = Seasonal_Impact_Score, y = Operational_Cost_USD)) +
 
 ***Observation***: Based on the chart above, we can observe a slight increase in operational costs as the seasonal impact score rises. This suggests that seasonal impact may have some influence on operational costs, but the effect is not particularly strong. Therefore, we believe that there may be other factors influencing the cost.
 
-### 4.4 Relationship **between** Operational Cost **and** Fuel Efficiency  
+### 4.4 Relationship **between** Operational Cost **and** Fuel Efficiency
 
 We want to check whether fuel efficiency has a noticeable influence on operational costs.
 
@@ -401,7 +401,7 @@ ggscatterstats(
 ```
 :::
 
-***Observation***: Based on the chart above, we can observe that there is the slight increase for revenue as the distance traveled rise. This suggests that distance traveled may have some influence on revenue per voyage. The statistical analysis further supports this conclusion, as the Pearson correlation coefficient is 0.05, indicating a weak positive correlation. The p-value (0.00966) is below the 0.05 threshold, suggesting statistical significance. However, the data indicates that there is only a weak positive correlation between them. This implies that while the relationship is statistically significant, its impact on operational costs is not that substantial.
+***Observation***: Based on the chart above, we can observe that there is the slight increase for revenue as the distance traveled rise. This suggests that distance traveled may have some influence on revenue per voyage. The statistical analysis further supports this conclusion, as the Pearson correlation coefficient is 0.05, indicating a weak positive correlation. The p-value (0.00966) is below the 0.05 threshold, suggesting statistical significance. However, the data indicates that there is only a weak positive correlation between them. This implies that while the relationship is statistically significant, its impact on revenue per voyage is not that substantial.
 
 ### 4.6 An Exploration of Factors Potentially Impacting Revenue
 
