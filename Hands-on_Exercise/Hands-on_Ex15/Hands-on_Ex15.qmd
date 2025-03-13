@@ -208,13 +208,9 @@ Despite its usefulness of drawing a choropleth map quickly and easily, the disad
 ```{r}
 #| message: false
 #| warning: false
-#| fig-width: 12
 #| fig-height: 10
-tm_shape(mpsz_pop2020)+
-  tm_fill("DEPENDENCY", 
-          style = "quantile", 
-          palette = "Blues",
-          title = "Dependency ratio") +
+#| fig-width: 12
+tm_shape(mpsz_pop2020) +
   tm_layout(main.title = "Distribution of Dependency Ratio by planning subzone",
             main.title.position = "center",
             main.title.size = 1.2,
@@ -226,7 +222,11 @@ tm_shape(mpsz_pop2020)+
   tm_scale_bar() +
   tm_grid(alpha =0.2) +
   tm_credits("Source: Planning Sub-zone boundary from Urban Redevelopment Authorithy (URA)\n and Population data from Department of Statistics DOS", 
-             position = c("left", "bottom"))
+             position = c("left", "bottom"))+
+  tm_fill("DEPENDENCY", 
+          style = "quantile", 
+          palette = "Blues",
+          title = "Dependency ratio")
 ```
 
 #### 15.4.2.1 Drawing a base map
@@ -306,9 +306,9 @@ The code chunk below shows a quantile data classification that used 5 classes.
 
 ```{r}
 tm_shape(mpsz_pop2020) +
+  tm_borders(fill_alpha = 0.5) +
   tm_fill("DEPENDENCY", 
-          fill.scale = tm_scale_intervals(n = 5, style = "jenks")) + 
-  tm_borders(fill_alpha = 0.5)  
+          fill.scale = tm_scale_intervals(n = 5, style = "jenks"))
 ```
 
 In the code chunk below, *equal* data classification method is used.
@@ -512,6 +512,23 @@ tm_shape(mpsz_pop2020) +
 #### 15.4.6.2 By defining a group-by variable in *tm_facets()*
 
 In this example, multiple small choropleth maps are created by using **tm_facets()**.
+
+```{r}
+tm_shape(mpsz_pop2020) +
+  tm_fill("DEPENDENCY",
+          fill.scale = tm_scale_intervals(),
+          values = "brewer.blues",
+          thres.poly = 0) +
+  tm_facets(by = "REGION_N",
+            free.coords = FALSE,
+            drop.units = TRUE) +
+  tm_layout(legend.show = FALSE,
+            title.position = c("center", "center"),
+            title.size = 20) +
+  tm_borders(fill_alpha = 1)
+
+
+```
 
 #### 15.4.6.3 By creating multiple stand-alone maps with *tmap_arrange()*
 
