@@ -159,14 +159,11 @@ tm_shape(sgpools_sf) +
 
 -   **Key parameter explanations**:
 
-    -   `by = "OUTLET TYPE"`
-        → **Divides the map into separate facets based on the `OUTLET TYPE` variable.**
+    -   `by = "OUTLET TYPE"` → **Divides the map into separate facets based on the `OUTLET TYPE` variable.**
 
-    -   `nrow = 1`
-        → **Arranges the facets in a single row (horizontally).**
+    -   `nrow = 1` → **Arranges the facets in a single row (horizontally).**
 
-    -   `sync = TRUE`
-        → **Ensures that all facets share the same zoom level and map extent.**
+    -   `sync = TRUE` → **Ensures that all facets share the same zoom level and map extent.**
 :::
 
 Before ending the session, it is wiser to switch **tmap**’s Viewer back to plot mode by using the code chunk below.
