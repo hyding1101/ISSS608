@@ -1,0 +1,10 @@
+---
+title: "In-class_Ex10"
+author: "Ding Hong Yan"
+date-modified: "last-modified" 
+execute:
+  echo: true
+  eval: true
+  warning: false
+  freeze: true
+---
