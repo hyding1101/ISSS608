@@ -200,7 +200,7 @@ p <- ggplot(data_clean, aes(x = province_en)) +
   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
   labs(title = "Number of Accidents by Province", x = "Province", y = "Count")
 
-# 轉換為 plotly 並隱藏 x 軸標籤
+
 p_plotly <- ggplotly(p) %>%
   layout(xaxis = list(tickmode = "array", tickvals = c(), ticktext = c()))
 
@@ -261,13 +261,13 @@ significant_causes <- cause_counts %>%
 data_filtered <- data_clean %>%
   filter(presumed_cause %in% significant_causes$presumed_cause)
 
-# 繪製圖表，按計數排序
+
 p <- ggplot(data_filtered, aes(x = reorder(presumed_cause, -table(presumed_cause)[presumed_cause]))) +
   geom_bar(fill = "salmon") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   labs(title = "Number of Accidents by Presumed Cause", x = "Presumed Cause", y = "Count")
 
-# 轉為互動式圖表
+
 ggplotly(p)
 ```
 
@@ -306,7 +306,7 @@ This chart suggests that weather conditions may not have a significant impact on
 ```{r}
 data_clean$number_of_fatalities <- as.numeric(data_clean$number_of_fatalities)
 
-# 繪製直方圖
+
 p <- ggplot(data_clean, aes(x = number_of_fatalities)) +
   geom_histogram(binwidth = 1, fill = "purple", color = "black") +
   labs(title = "Distribution of Fatalities per Accident", 
@@ -315,7 +315,7 @@ p <- ggplot(data_clean, aes(x = number_of_fatalities)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 0, hjust = 0.5))
 
-# 轉為互動式圖表
+
 ggplotly(p)
 ```
 
